@@ -564,6 +564,13 @@ class AIOKafkaConsumer:
                         f"Partition {tp} is not assigned")
 
         await self._coordinator.commit_offsets(assignment, offsets)
+        self.update_committed_positions(assignment, offsets)
+
+    @staticmethod
+    def update_committed_positions(assignment, offsets):
+        for tp, offset in offsets.items():
+            state = assignment.state_value(tp)
+            state.consumed_to(offset.offset)
 
     async def committed(self, partition):
         """ Get the last committed offset for the given partition. (whether the

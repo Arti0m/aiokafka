@@ -118,11 +118,9 @@ class FetchResult:
                 msg = next(self._partition_records)
             except StopIteration:
                 # We should update position in any case
-                self._update_position()
                 self._partition_records = None
                 return
             else:
-                self._update_position()
                 return msg
 
     def getall(self, max_records=None):
